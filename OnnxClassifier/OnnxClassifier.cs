@@ -7,7 +7,6 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp.Processing;
 using Microsoft.ML.OnnxRuntime;
 
-
 using System.Linq;
 
 
@@ -26,7 +25,7 @@ namespace OnnxClassifier
 
         }
 
-        static public DenseTensor<float> PreprocImage(string imageFilePath)
+        static private DenseTensor<float> PreprocImage(string imageFilePath)
         {
             using Image<Rgb24> image = Image.Load<Rgb24>(imageFilePath);
 
@@ -61,8 +60,9 @@ namespace OnnxClassifier
 
 
 
-        public string PredictModel(DenseTensor<float> TensorImage)
+        public ResultClassification PredictModel(string imageFilePath)
         {
+            DenseTensor<float> TensorImage = OnnxClassifier.PreprocImage(imageFilePath);
 
             var inputs = new List<NamedOnnxValue>
             {
@@ -73,10 +73,13 @@ namespace OnnxClassifier
 
             var output = results.First().AsEnumerable<float>().ToArray();
             float sum = output.Sum(x => (float)Math.Exp(x));
+     
             var softmax = output.Select(x => (float)Math.Exp(x) / sum).ToList();
 
+            string cl = LabelMap.Labels[softmax.IndexOf(softmax.Max())];
+            ResultClassification result = new ResultClassification(imageFilePath, cl, softmax.Max());
 
-            return LabelMap.Labels[softmax.IndexOf(softmax.Max())];
+            return result;
 
 
         }

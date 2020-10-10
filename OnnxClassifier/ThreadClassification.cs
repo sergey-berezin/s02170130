@@ -6,27 +6,51 @@ using System.Threading;
 
 namespace OnnxClassifier
 {
+    public class ResultClassification
+    {
+        private string PathImage;
+        private string ClassImage;
+        private float Probability;
+
+        public ResultClassification(string path, string cl, float prob)
+        {
+            PathImage = path;
+            ClassImage = cl;
+            Probability = prob;
+        }
+
+        public override string ToString()
+        {
+            return PathImage + ' ' + ClassImage + ' ' + Probability.ToString();
+        }
+    }
+
+
+
     public class ThreadClassification
     {
-        private AutoResetEvent wait = new AutoResetEvent(true);
 
-        private ConcurrentQueue<string> pathImages = new ConcurrentQueue<string>();
+        Action<ResultClassification> ImageRecognitionCompleted;
 
-        private CancellationTokenSource cancelThreads = new CancellationTokenSource();
-        private CancellationTokenSource cancelRun = new CancellationTokenSource();
 
-        private OnnxClassifier model;
+        private ConcurrentQueue<string> PathImages = new ConcurrentQueue<string>();
+        public ConcurrentQueue<ResultClassification> Result = new ConcurrentQueue<ResultClassification>();
 
-        public ThreadClassification(string currentDirectory, OnnxClassifier onnxModel)
+        private CancellationTokenSource CancelThreads = new CancellationTokenSource(); //для пула потоков
+
+        private OnnxClassifier Model;
+
+        public ThreadClassification(string currentDirectory, OnnxClassifier onnxModel, Action<ResultClassification> handler)
         {
-            model = onnxModel;
+            Model = onnxModel;
+            ImageRecognitionCompleted = handler;
 
-            pathImages = new ConcurrentQueue<string>(Directory.GetFiles(currentDirectory, "*.JPEG"));
+            PathImages = new ConcurrentQueue<string>(Directory.GetFiles(currentDirectory, "*.JPEG"));
         }
 
         public void Run()
         {
-            Console.WriteLine("Press Enter to stop");
+            
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
             {
@@ -35,15 +59,13 @@ namespace OnnxClassifier
                 th.Start();
             }
 
-            while (!cancelRun.Token.IsCancellationRequested)
-            {
-                if (Console.KeyAvailable && Console.ReadKey().Key == ConsoleKey.Enter)
-                {
-                    cancelThreads.Cancel();
-                    break;
-                }
+            
 
-            }
+        }
+
+        public void Stopper()
+        {
+            CancelThreads.Cancel();
 
         }
 
@@ -51,22 +73,15 @@ namespace OnnxClassifier
 
         private void Worker()
         {
-            while (!cancelThreads.Token.IsCancellationRequested && pathImages.TryDequeue(out string image))
+
+            while (!CancelThreads.Token.IsCancellationRequested && PathImages.TryDequeue(out string image))
             {
+                ResultClassification result = Model.PredictModel(image);
 
-                string result = model.PredictModel(OnnxClassifier.PreprocImage(image));
-
-                wait.WaitOne();
-                Thread.Sleep(500);
-                if (!cancelThreads.Token.IsCancellationRequested)
-                    Console.WriteLine($"{Thread.CurrentThread.Name}: {result}");
-                wait.Set();
-
+                Result.Enqueue(result);
+                ImageRecognitionCompleted(result);
 
             }
-            cancelRun.Cancel();
-
-            
 
         }
     
