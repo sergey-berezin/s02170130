@@ -1,0 +1,33 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task_1", "Task_1.csproj", "{497529D4-B872-4AE6-B4A0-23EF98B6332A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnnxClassifier", "..\OnnxClassifier\OnnxClassifier.csproj", "{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Debug|Win32.Build.0 = Debug|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Release|Win32.ActiveCfg = Release|Any CPU
+		{497529D4-B872-4AE6-B4A0-23EF98B6332A}.Release|Win32.Build.0 = Release|Any CPU
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Debug|Any CPU.Build.0 = Debug|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Release|Any CPU.ActiveCfg = Release|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Release|Any CPU.Build.0 = Release|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Debug|Win32.Build.0 = Debug|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Release|Win32.ActiveCfg = Release|Win32
+		{9D9DCA16-EE16-4ECB-97E0-8BFEAED71F93}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+EndGlobal
