@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Task_2;assembly=Task_2"
+        mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
+        x:Class="Task_2.MainWindow"
+        Title="ClassificationImages">
+
+    <Window.Resources>
+         <local:ImageConverter x:Key="ImageConverter"/>
+     </Window.Resources>
+
+
+
+<Grid ColumnDefinitions="1*,2*" RowDefinitions="1*,7*" ShowGridLines="True">
+    
+    
+		<Button Width="160" Height="30" Name ="OpenButton" Button.Click="OpenClickHandler" Grid.Row="0" Grid.Column="0">Open</Button>
+
+        <Button Width="160" Height="30" Name="StartButton" Button.Click="StartClickHandler"
+                Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin ="15 10 0 0">Start</Button>
+        <Button Width="160" Height="30" Name="CancelButton" Button.Click="CancelClickHandler"
+                Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin ="0 10 15 0">Cancel</Button>
+
+    
+
+        <TextBlock Name="CurrentDirectory" Text="Directory" FontSize="13" Grid.Row="1" Grid.Column="0" Margin="10"/>
+
+
+
+
+    
+
+    <ListBox Name="Classes" Items="{Binding Classes}" 
+             SelectedItem="{Binding SelectedItem}" Width="200" Height="400" Grid.Row="1" Grid.Column="0" Margin="10"/>
+
+    <ListBox Name="Images" Items="{Binding SelectedResult}"
+             Width="500" Height="400" Grid.Row="1" Grid.Column="1" Margin="10">
+         <ListBox.ItemTemplate> 
+        <DataTemplate>
+                         <Image Source="{Binding _PathImage, Converter={StaticResource ImageConverter}}"/>
+                
+                      
+                 </DataTemplate>
+              </ListBox.ItemTemplate> 
+        </ListBox>
+
+    
+</Grid>
+
+    
+
+</Window>
