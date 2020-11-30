@@ -45,7 +45,8 @@
              Width="300" Height="400" Grid.Row="1" Grid.Column="1" Margin="10">
          <ListBox.ItemTemplate> 
         <DataTemplate>
-                         <Image Source="{Binding _PathImage, Converter={StaticResource ImageConverter}}"/>
+                         
+                        <Image Source="{Binding ImageBytes, Converter={StaticResource ImageConverter}}"/>
                 
                       
                  </DataTemplate>

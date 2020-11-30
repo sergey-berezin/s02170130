@@ -12,9 +12,12 @@ namespace Task_3
             if (value == null)
                 return null;
 
-            if (value is string rawUri && targetType == typeof(IBitmap))
+            if (value is Blob rawUri && targetType == typeof(IBitmap))
             {
-                return new Bitmap(rawUri);
+                //Console.WriteLine('M');
+                //return 'N';
+                return ClassificationVM.ByteArrayToImage(rawUri.Bytes);
+                //return new Bitmap("/Users/alexandra/Desktop/imagen/n07753113_7675_fig.jpg");
             }
             throw new NotSupportedException();
         }

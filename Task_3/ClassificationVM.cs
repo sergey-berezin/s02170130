@@ -13,8 +13,6 @@ using Avalonia.Media.Imaging;
 using System.Numerics;
 
 
-//Task_3
-
 namespace Task_3
 {
     public class ClassificationVM : INotifyPropertyChanged
@@ -23,11 +21,12 @@ namespace Task_3
 
         public OnnxClassifier.ThreadClassification task;
         public OnnxClassifier.OnnxClassifier onnxModel;
-        public ObservableCollection<Tuple<string, int>> Classes {get; set;}
+        public ObservableCollection<Tuple<string, int>> Classes { get; set; }
         public ObservableCollection<ResultClassification> Result { get; set; }
-        public ObservableCollection<ResultClassification> SelectedResult { get; set; }
+        public ObservableCollection<RecognitionImage> SelectedResult { get; set; }
+        
 
-        private ObservableCollection<Tuple<string, int>> stat { get; set; } 
+        private ObservableCollection<Tuple<int, int>> stat { get; set; } 
 
         private List<string> PathImages = new List<string>();
         private ConcurrentQueue<string> NewPathImages = new ConcurrentQueue<string>();
@@ -51,8 +50,19 @@ namespace Task_3
 
                 if (value != null)
                 {
-                    SelectedResult = 
-                        new ObservableCollection<ResultClassification>(Result.Where(elem => elem._ClassImage == selectedItem.Item1));
+                    //SelectedResult = 
+                    //new ObservableCollection<ResultClassification>(Result.Where(elem => elem._ClassImage == selectedItem.Item1));
+                    SelectedResult = new ObservableCollection<RecognitionImage>();
+                    lock (db)
+                    {
+                        var images = db.Images.Where(p => p.Class == selectedItem.Item1).Select(p => p).ToList();
+                        foreach (var img in images)
+                        {
+                            SelectedResult.Add(img);
+
+                        }
+                    }
+                    Console.WriteLine(SelectedResult.Count);
                     OnPropertyChanged("SelectedResult");
                 }
                 
@@ -64,8 +74,10 @@ namespace Task_3
         {
             Classes = new ObservableCollection<Tuple<string, int>>();
             Result = new ObservableCollection<ResultClassification>();
-            SelectedResult = new ObservableCollection<ResultClassification>();
-            stat = new ObservableCollection<Tuple<string, int>>();
+            //SelectedResult = new ObservableCollection<ResultClassification>();
+            SelectedResult = new ObservableCollection<RecognitionImage>();
+
+            stat = new ObservableCollection<Tuple<int, int>>();
 
             db = new ApplicationContext();
 
@@ -151,9 +163,9 @@ namespace Task_3
                     {
                         img.Call += 1;
                         db.SaveChanges();
-                        return new ResultClassification(img.Path, img.Class, img.Prob);
+                        return new ResultClassification(img.Path,img.Class, img.Prob);
                     }
-                }
+                } 
             }
             
 
@@ -170,7 +182,7 @@ namespace Task_3
 
                 RecognitionImage elem = new RecognitionImage
                 {
-                    Path = obj._PathImage,
+                    //Path = obj._PathImage,
                     Class = obj._ClassImage,
                     Prob = obj.Probability,
                     ImageBytes = ImageBlob,
@@ -187,15 +199,7 @@ namespace Task_3
 
         public void ClearDataBase()
         {
-            lock (db)
-            {
-                try
-                {
-                    db.Database.EnsureDeleted();
-                    db.Database.EnsureCreated();
-                }
-                catch (Exception) { }
-            }
+            db.ClearDataBase();
 
         }
 
@@ -206,7 +210,15 @@ namespace Task_3
             {
                 image.Save(stream);
                 return stream.ToArray();
+            }
+        }
 
+        static public Avalonia.Media.Imaging.Bitmap ByteArrayToImage(byte[] array)
+        {
+            using (MemoryStream stream = new MemoryStream(array))
+            {
+                return new Avalonia.Media.Imaging.Bitmap(stream);
+                //return new Avalonia.Media.Imaging.Bitmap("/Users/alexandra/Desktop/imagen/n07753113_7675_fig.jpg");
             }
         }
 
@@ -219,12 +231,12 @@ namespace Task_3
             {
                 var images = db.Images.Select(p => new
                 {
-                    Path = p.Path,
+                    Hash = p.Hash,
                     Call = p.Call,
                 });
 
                 foreach (var elem in images)
-                    stat.Add(new Tuple<string, int>(elem.Path, elem.Call));
+                    stat.Add(new Tuple<int, int>(elem.Hash, elem.Call));
             }
 
 

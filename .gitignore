@@ -46,6 +46,9 @@ x64/
 *.log
 *.svclog
 *.scc
+*.DS_Store
+*.sln
+*.csproj
 
 # Visual C++ cache files
 ipch/
