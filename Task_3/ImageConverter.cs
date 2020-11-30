@@ -14,10 +14,7 @@ namespace Task_3
 
             if (value is Blob rawUri && targetType == typeof(IBitmap))
             {
-                //Console.WriteLine('M');
-                //return 'N';
                 return ClassificationVM.ByteArrayToImage(rawUri.Bytes);
-                //return new Bitmap("/Users/alexandra/Desktop/imagen/n07753113_7675_fig.jpg");
             }
             throw new NotSupportedException();
         }
