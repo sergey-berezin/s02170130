@@ -2,8 +2,9 @@
 using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
+using System.IO;
 
-namespace Task_3
+namespace Task_4
 {
     public class ImageConverter : IValueConverter
     {
@@ -11,10 +12,9 @@ namespace Task_3
         {
             if (value == null)
                 return null;
-
-            if (value is Blob rawUri && targetType == typeof(IBitmap))
+            if (value is string base64str && targetType == typeof(IBitmap))
             {
-                return ClassificationVM.ByteArrayToImage(rawUri.Bytes);
+                return new Bitmap(new MemoryStream(System.Convert.FromBase64String(base64str)));
             }
             throw new NotSupportedException();
         }

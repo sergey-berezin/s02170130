@@ -13,6 +13,19 @@ namespace Task_3
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite("Data Source=images.db");
+
+        public void ClearDataBase()
+        {
+            lock (this)
+            {
+
+                Images.RemoveRange(Images);
+                Blobs.RemoveRange(Blobs);
+                SaveChanges();
+
+            }
+
+        }
     }
 
     public class RecognitionImage
@@ -34,4 +47,6 @@ namespace Task_3
         public byte[] Bytes { get; set; }
 
     }
+
+    
 }

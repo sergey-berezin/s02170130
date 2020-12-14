@@ -19,7 +19,7 @@ namespace OnnxClassifier
         const int TargetWidth = 224;
         const int TargetHeight = 224;
 
-        public OnnxClassifier(string modelFilePath = "..//..//s02170130/OnnxClassifier/resnet50-v2-7.onnx")
+        public OnnxClassifier(string modelFilePath = "/Users/alexandra/Desktop/s02170130/OnnxClassifier/resnet50-v2-7.onnx")
         {
             session = new InferenceSession(modelFilePath);
 
