@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using OnnxClassifier;
 using static API.DataBaseUtils;
@@ -26,6 +27,7 @@ namespace API.Controllers
                 onnxModel = new OnnxClassifier.OnnxClassifier();
                 result = onnxModel.PredictModel(obj.path);
 
+                obj.path = result._PathImage;
                 obj.Probability = result._Probability;
                 obj.ClassImage = result._ClassImage;
                 db.AddToDataBase(obj);
@@ -55,6 +57,28 @@ namespace API.Controllers
             {
                 return db.GetAllImages();
             }
+
+        }
+
+        [HttpGet("{page}")]
+        public IEnumerable<ImageString> Get(int page)
+        {
+            List<ImageString> result = new List<ImageString>();
+            using (var db = new ApplicationContext())
+            {
+                List<ImageString> AllImagesInBd = db.GetAllImages();
+
+                for (int i = page * 10; i < Math.Min(10 * (page + 1), AllImagesInBd.Count); i++)
+                {
+                    result.Add(AllImagesInBd[i]);
+                }
+
+                return result;
+            }
+
+
+            
+
 
         }
 
