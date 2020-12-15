@@ -35,7 +35,7 @@ namespace API
                 
             }
 
-            public IEnumerable<ImageString> GetAllImages()
+            public List<ImageString> GetAllImages()
             {
                 var q = from item in this.Images
                         select new ImageString()
@@ -45,8 +45,21 @@ namespace API
                             ClassImage = item.Class,
                             Probability = item.Prob
                         };
-                return q.ToArray();
+                return q.ToList();
             }
+
+            public List<ImageStringWeb> GetAllImagesForWeb()
+            {
+                var q = from item in this.Images
+                        select new ImageStringWeb()
+                        {
+                            ImageBase64 = Convert.ToBase64String(item.ImageBytes.Bytes),
+                            path = item.Path,
+                            ClassImage = item.Class,
+                        };
+                return q.ToList();
+            }
+
             public void ClearDataBase()
             {
                 lock (this)
@@ -75,7 +88,8 @@ namespace API
                         Prob = obj.Probability,
                         ImageBytes = ImageBlob,
                         Call = 0,
-                        Hash = GetHashFromBytes(BytesImage)
+                        Hash = GetHashFromBytes(BytesImage),
+                        Path = obj.path
                     };
                     this.Images.Add(elem);
                     this.SaveChanges();

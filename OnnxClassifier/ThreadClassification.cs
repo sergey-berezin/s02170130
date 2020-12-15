@@ -16,6 +16,14 @@ namespace OnnxClassifier
 
     }
 
+    public class ImageStringWeb
+    {
+        public string path { get; set; }
+        public string ImageBase64 { get; set; }
+        public string ClassImage { get; set; }
+
+    }
+
     public class ResultClassification
     {
         private string PathImage;
