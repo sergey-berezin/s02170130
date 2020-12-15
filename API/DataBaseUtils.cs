@@ -48,18 +48,6 @@ namespace API
                 return q.ToList();
             }
 
-            public List<ImageStringWeb> GetAllImagesForWeb()
-            {
-                var q = from item in this.Images
-                        select new ImageStringWeb()
-                        {
-                            ImageBase64 = Convert.ToBase64String(item.ImageBytes.Bytes),
-                            path = item.Path,
-                            ClassImage = item.Class,
-                        };
-                return q.ToList();
-            }
-
             public void ClearDataBase()
             {
                 lock (this)
